@@ -6,7 +6,8 @@ const collection = document.querySelector(".gallery");
 const createMarkup = galleryItems
   .map(
     ({ preview, original, description }) => `<li class="gallery__item">
-    <a class="gallery__link" href="${original}">
+    <a class="gallery__link" 
+    href="${original}">
       <img
         class="gallery__image"
         src="${preview}"
@@ -18,17 +19,18 @@ const createMarkup = galleryItems
   )
   .join("");
 collection.insertAdjacentHTML("afterbegin", createMarkup);
-collection.addEventListener('click',handlerClick)
+collection.addEventListener("click", handlerClick);
 function handlerClick(event) {
-  if (event.target.classList.contains("gallery__image")) {
+  event.preventDefault();
+  if (!event.target.classList.contains("gallery__image")) {
     return;
   }
-  event.preventDefault();
+  console.log(event.target)
   const instance = basicLightbox.create(
-    `<img width="1400" heihth="900" 
-   src="${event.target.dataset.sourse}">`,
+    `<img width="1400" height="900" 
+   src="${event.target.dataset.source}">`,
     {
-      onShowe: () => {
+      onShow: () => {
         window.addEventListener("keydown", onEsc);
       },
       onClose: () => {
@@ -36,9 +38,11 @@ function handlerClick(event) {
       },
     }
   );
+  instance.show();
+
   function onEsc(event) {
     if (event.key == "Escape") {
       instance.close();
     }
   }
-};
+}
